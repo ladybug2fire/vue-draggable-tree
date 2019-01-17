@@ -1,37 +1,44 @@
 <template>
   <div>
-    <div
-      :class="['node',{'active': active}, {'arrow': node.children && node.children.length > 0}]"
-      @click="clickHandler"
-      @dragover="dragoverHandler"
-      @dragenter="dragEnterHandler"
-      @dragleave="dragLeaveHandler"
-      @drop="dropHandler"
-      ref="node"
-    >
-        <span :class="{'dragover': dragover}">{{node.label}}</span>
-    </div>
-    <div :class="['children-node', {'active': active}]">
-        <slot />
-    </div>
+        <div
+            :class="['node',{'active': active}, {'arrow': node.children && node.children.length > 0}]"
+            @click="clickHandler"
+            @dragover="dragoverHandler"
+            @dragenter="dragEnterHandler"
+            @dragleave="dragLeaveHandler"
+            @drop="dropHandler"
+            ref="node"
+            >
+            <span :class="{'dragover': dragover}">{{node.label}}</span>
+        </div>
+        <div :class="['children-node', {'active': active}]" v-if="node.children">
+            <draggable v-model="node.children" :options="options" class="vue-draggle-tree-node-container">
+                <tree-node :node="t" :options="options" v-for="(t,i) in node.children"  :key="i"/>
+            </draggable>
+        </div>
   </div>
 </template>
 
 <script>
 import _ from 'lodash'
-
+import draggable from 'vuedraggable'
 export default {
-    props: ['node'],
+    props: ['node', 'options'],
+    name: 'treeNode',
     data () {
         return {
             active: true,
-            dragover: false
+            dragover: false,
+            tree: null,
         }
     },
+    components:{
+        draggable
+    },
     methods: {
-        dragEnterHandler ($event) {
-            console.log(this.$refs.node !== $event.target)
-            this.dragover = true
+        dragEnterHandler () {
+            this.dragover = true,
+            this.tree && this.tree.$emit('treeDrop',11)
         },
         dragLeaveHandler () {
             this.dragover = false
@@ -41,13 +48,26 @@ export default {
             this.active = true
         },
         dragoverHandler: _.throttle(function () {
-            console.log('dragover')
             if (!this.node.children) {
                 this.$set(this.node, 'children', [])
             }
         }, 1000),
         clickHandler () {
             this.$set(this, 'active', !this.active)
+        }
+    },
+    created(){
+        const parent = this.$parent.$parent;
+
+        if (parent.isTree) {
+            this.tree = parent;
+        } else {
+            this.tree = parent.tree;
+        }
+
+        const tree = this.tree;
+        if (!tree) {
+            console.warn('Can not find node\'s tree.');
         }
     }
 }

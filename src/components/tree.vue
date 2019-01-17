@@ -1,12 +1,7 @@
 <template>
     <div>
-      <draggable v-model="tree" :options="dragOptions" class="container">
-          <div v-for="(t,i) in tree" :key="i" class="node-container"
-          >
-            <tree-node :node="t" :options="options">
-                <tree v-if="t.children" v-model="t.children" :options="dragOptions"/>
-            </tree-node>
-          </div>
+      <draggable v-model="tree" :options="dragOptions" class="node-container">
+            <tree-node :node="t" :options="dragOptions"  v-for="(t,i) in tree" :key="i"/>
       </draggable>
     </div>
 </template>
@@ -15,7 +10,13 @@
 import draggable from 'vuedraggable'
 import treeNode from './treeNode'
 export default {
+    name: 'tree',
     props: ['value', 'options'],
+    data() {
+        return {
+            isTree: true,
+        }
+    },
     computed: {
         tree: {
             get () {
@@ -27,13 +28,12 @@ export default {
         },
         dragOptions () {
             return Object.assign({ animation: 0,
-                group: { name: 'pages', pull: true, put: true },
+                group: 'tree',
                 swapThreshold: 0.1
             }, this.options
             )
         }
     },
-    name: 'tree',
     components: {
         draggable,
         treeNode
@@ -41,12 +41,10 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-.node-container{
-    padding-left: 1rem;
+<style lang="less">
+.vue-draggle-tree-node-container{
+    padding-left: 1.5rem;
     color: #606266;
-}
-.container{
     min-height: 1px;
 }
 

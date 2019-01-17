@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <tree v-model="tree" />
+    <tree v-model="tree" @treeDrop="listenDrop" />
   </div>
 </template>
 
@@ -80,6 +80,11 @@ export default {
         }
       ]
     };
+  },
+  methods:{
+    listenDrop(v){
+      console.log('listen', v)
+    }
   }
 };
 </script>
