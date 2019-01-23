@@ -1,7 +1,7 @@
 <template>
     <div>
       <draggable v-model="tree" :options="dragOptions" class="node-container">
-            <tree-node :node="t" :options="dragOptions"  v-for="(t,i) in tree" :key="i"/>
+            <tree-node :node="t" :options="dragOptions" v-for="(t,i) in tree" :key="i"/>
       </draggable>
     </div>
 </template>

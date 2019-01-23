@@ -13,7 +13,7 @@
         </div>
         <div :class="['children-node', {'active': active}]" v-if="node.children">
             <draggable v-model="node.children" :options="options" class="vue-draggle-tree-node-container">
-                <tree-node :node="t" :options="options" v-for="(t,i) in node.children"  :key="i"/>
+                <tree-node :node="t" :options="options" v-for="(t,i) in node.children" :parent="node"  :key="i"/>
             </draggable>
         </div>
   </div>
@@ -23,7 +23,7 @@
 import _ from 'lodash'
 import draggable from 'vuedraggable'
 export default {
-    props: ['node', 'options'],
+    props: ['node', 'options', 'parent'],
     name: 'treeNode',
     data () {
         return {

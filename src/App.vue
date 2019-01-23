@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <tree v-model="tree" @treeDrop="listenDrop" />
+    <tree v-model="tree" @treeDrop="listenDrop">
+
+    </tree>
   </div>
 </template>
 
