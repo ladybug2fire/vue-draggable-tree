@@ -1,7 +1,11 @@
 <template>
   <div id="app">
     <tree v-model="tree" @treeDrop="listenDrop">
-
+        <template slot-scope="{node, data}">
+          <div>
+           {{data.label}}<a style="color:blue" @click="doProcess(node, data)">-删除</a>
+          </div>
+        </template>
     </tree>
   </div>
 </template>
@@ -86,7 +90,10 @@ export default {
   methods:{
     listenDrop(v){
       console.log('listen', v)
-    }
+    },
+     doProcess(node, data){
+      console.log('slot ....--->', node, data)
+     }
   }
 };
 </script>
