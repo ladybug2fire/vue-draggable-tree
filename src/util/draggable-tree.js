@@ -31,14 +31,14 @@ export default {
             }
             _.assignIn(this,{ dropType, draggingNode, dropNode });
             if(this.allowDrop){
-                return this.allowDrop(draggingNode, dropNode, dropType)
+                return this.allowDrop({data: draggingNode, parent: this.parent}, {data: dropNode}, dropType)
             }
         },
         onEnd() {
             const { draggingNode, dropNode, dropType } = this;
             const ctx = this.isTree ? this : this.tree;
             //TODO: 增加 parent
-            ctx && ctx.$emit("node-drop", draggingNode, dropNode, dropType);
+            ctx && ctx.$emit("node-drop", {data: draggingNode, parent: this.parent}, {data: dropNode}, dropType);
             // eslint-disable-next-line no-console
             console.log('node-drop','draggingnode:', JSON.stringify(draggingNode),'dropnode:', JSON.stringify(dropNode), dropType)
         },
