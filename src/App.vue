@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <tree v-model="tree" @treeDrop="listenDrop">
-        <template slot-scope="{node, data}">
+        <!-- <template slot-scope="{node, data}">
           <div>
            {{data.name}}<a style="color:blue" @click="doProcess(node, data)">-删除</a>
           </div>
-        </template>
+        </template> -->
     </tree>
     <!-- <tree v-model="tree2" @treeDrop="listenDrop">
         <template slot-scope="{node, data}">

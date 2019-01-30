@@ -1,14 +1,14 @@
 <template>
   <div>
     <div :class="['node']" @drop="dropHandler" ref="node">
-        <span :class="[{'active': active},{'arrow': childs && childs.length > 0}]"
+        <span :class="[{'nodeActive': nodeActive},{'arrow': childs && childs.length > 0}]"
             @click="clickHandler"
         ></span>
         <slot v-bind="{node:{ node } , data: node.data }"></slot>
         <span :class="{'dragover': dragover}" v-if="!hasDefaultSlot">{{node.data.name}}-<font color="green">{{unaKey}}</font></span>
     </div>
     <div
-      :class="['children-node', {'active': active}]"
+      :class="['children-node', {'nodeActive': nodeActive}]"
       v-if="childs"
     >
     <draggable v-model="childs" :options="options" class="vue-draggle-tree-node-container" :move="onMove" 
@@ -38,16 +38,13 @@ export default {
   mixins: [treeBase],
   data() {
     return {
-      active: true,
+      nodeActive: true,
       dragover: false,
       tree: null, 
     };
   },
   inject:['rootTree'],
   computed:{
-    instances(){
-      return this.$store.getters.getInstances;
-    },
     node(){
       return _.isMap(this.instances) && this.instances.get(this.unaKey);
     },
@@ -65,10 +62,10 @@ export default {
   },
   methods: {
     dropHandler() {
-      this.active = true;
+      this.nodeActive = true;
     },
     clickHandler() {
-      this.$set(this, "active", !this.active);
+      this.$set(this, "nodeActive", !this.nodeActive);
       this.tree.$emit("node-click", this.instance);
     },
   },
@@ -80,9 +77,9 @@ export default {
 
 <style lang="less" scoped>
 .node {
-  padding: 0.2rem 1rem;
-  border-radius: 0.2rem;
-  margin: 0.2rem 0;
+  padding: 2px 10px;
+  border-radius: 2px;
+  margin: 2px 0;
   display: flex;
   cursor: pointer;
   &:hover {
@@ -92,17 +89,17 @@ export default {
 .arrow {
   &:before {
     content: "\25BA";
-    font-size: 0.3rem;
-    width: 1rem;
-    height: 1rem;
+    font-size: 5px;
+    width: 16px;
+    height: 28px;
     text-align: center;
-    line-height: 1rem;
+    line-height: 28px;
     vertical-align: middle;
     color: #606266;
     display: inline-block;
     transition: all 0.3s;
   }
-  &.active {
+  &.nodeActive {
     &:before {
       transform: rotate(90deg);
     }
@@ -112,7 +109,7 @@ export default {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s;
-  &.active {
+  &.nodeActive {
     max-height: 3000px;
   }
 }
