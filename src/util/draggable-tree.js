@@ -42,11 +42,9 @@ export default {
             // eslint-disable-next-line no-console
             console.log('node-drop','draggingnode:', JSON.stringify(draggingNode),'dropnode:', JSON.stringify(dropNode), dropType)
         },
-        onAdd(...p){
-            // console.log('add', p);
+        onAdd(){
         },
-        onRemove(...p){
-            // console.log('remove', p);
+        onRemove(){
         }
     },
 }
