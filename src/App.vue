@@ -3,11 +3,11 @@
     <tree v-model="tree" @treeDrop="listenDrop">
         <template slot-scope="{node, data}">
           <div>
-           {{data.label}}<a style="color:blue" @click="doProcess(node, data)">-删除</a>
+           {{data.name}}<a style="color:blue" @click="doProcess(node, data)">-删除</a>
           </div>
         </template>
     </tree>
-    <tree v-model="tree2" @treeDrop="listenDrop">
+    <!-- <tree v-model="tree2" @treeDrop="listenDrop">
         <template slot-scope="{node, data}">
           <div>
            {{data.label}}<a style="color:blue" :options="{
@@ -18,7 +18,7 @@
            }" @click="doProcess(node, data)">-删除</a>
           </div>
         </template>
-    </tree>
+    </tree> -->
   </div>
 </template>
 

@@ -1,91 +1,79 @@
 <template>
   <div>
-    <div
-      :class="['node']"
-      @dragover="dragoverHandler"
-      @dragenter="dragEnterHandler"
-      @dragleave="dragLeaveHandler"
-      @drop="dropHandler"
-      ref="node"
-    >
-        <span :class="[{'active': active},{'arrow': node.children && node.children.length > 0}]"
+    <div :class="['node']" @drop="dropHandler" ref="node">
+        <span :class="[{'active': active},{'arrow': childs && childs.length > 0}]"
             @click="clickHandler"
         ></span>
-        <slot v-bind="{node:{parent, data: node} , data:node }"></slot>
-        <span :class="{'dragover': dragover}" v-if="!hasDefaultSlot">{{node.label}}</span>
+        <slot name="leaf" v-bind="{node:{ node } , data: node.data }"></slot>
+        <span :class="{'dragover': dragover}" v-if="!hasDefaultSlot">{{node.data.name}}-<font color="green">{{unaKey}}</font></span>
     </div>
     <div
       :class="['children-node', {'active': active}]"
-      v-if="node.children"
+      v-if="childs"
     >
-      <draggable
-        v-model="node.children"
-        :options="options"
-        class="vue-draggle-tree-node-container"
-        :move="onMove"
-        @end="onEnd"
-      >
-        <tree-node
-          :node="t"
-          :options="options"
-          :parent="node"
-          :allow-drop="allowDrop"
-          v-for="(t,i) in node.children"
-          :key="i"
-        >
-            <template slot-scope="slotProps">
-                <div>
-                    <slot v-bind="slotProps"/>
-                </div>
+    <draggable v-model="childs" :options="options" class="vue-draggle-tree-node-container" :move="onMove" 
+        v-if="!hasDefaultSlot"
+        @end="onEnd" @add="onAdd" @remove="onRemove">
+        <tree-node :una-key="k" :options="options" :parent="unaKey" :allow-drop="allowDrop" v-for="k in childs" :key="k" />
+    </draggable>
+    <draggable v-model="childs" :options="options" class="vue-draggle-tree-node-container" :move="onMove" 
+        v-else
+        @end="onEnd" @add="onAdd" @remove="onRemove">
+        <tree-node :una-key="k" :options="options" :parent="unaKey" :allow-drop="allowDrop" v-for="k in childs" :key="k">
+            <template slot-scope="slotProps" slot="leaf">
+                <slot name="leaf" v-bind="slotProps"/>
             </template>
         </tree-node>
-      </draggable>
+    </draggable>
     </div>
   </div>
 </template>
 
 <script>
 import treeBase from "../util/draggable-tree";
+import _ from 'lodash';
 export default {
-  props: ["node", "parent"],
+  props: ["parentKey","unaKey"],
   name: "treeNode",
   mixins: [treeBase],
   data() {
     return {
       active: true,
       dragover: false,
-      tree: null,
+      tree: null, 
     };
   },
-
+  inject:['rootTree'],
+  computed:{
+    instances(){
+      return this.$store.getters.getInstances;
+    },
+    node(){
+      return _.isMap(this.instances) && this.instances.get(this.unaKey);
+    },
+    childs:{
+        get(){
+          return _.get(this.node, 'childs');
+        },
+        set(v){
+          this.$store.dispatch('updateChilds', {
+            key: this.unaKey,
+            childs: v,
+          })
+        }
+    },
+  },
   methods: {
-    dragEnterHandler() {
-      (this.dragover = true), this.tree && this.tree.$emit("treeDrop", 11);
-    },
-    dragLeaveHandler() {
-      this.dragover = false;
-    },
     dropHandler() {
-      this.dragover = false;
       this.active = true;
     },
     clickHandler() {
       this.$set(this, "active", !this.active);
-      this.tree.$emit("node-click", this.node);
+      this.tree.$emit("node-click", this.instance);
     },
   },
-  created() {
-    const parent = this.$parent.$parent;
-    if (parent.isTree) {
-      this.tree = parent;
-    } else {
-      this.tree = parent.tree;
-    }
-    const tree = this.tree;
-    if (!tree) {
-      // eslint-disable-next-line no-console
-      console.warn("Can not find node's tree.");
-    }
+  mounted(){
+    this.tree = this.rootTree();
   }
 };
 </script>
@@ -100,10 +88,6 @@ export default {
   &:hover {
     background-color: #f5f7fa;
   }
-  & .dragover {
-    background-color: #409eff;
-    color: #f5f7fa;
-  }
 }
 .arrow {
   &:before {
@@ -116,7 +100,7 @@ export default {
     vertical-align: middle;
     color: #606266;
     display: inline-block;
-    transition: all 0.5s;
+    transition: all 0.3s;
   }
   &.active {
     &:before {

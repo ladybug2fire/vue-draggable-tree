@@ -42,10 +42,11 @@ export default {
             // eslint-disable-next-line no-console
             console.log('node-drop','draggingnode:', JSON.stringify(draggingNode),'dropnode:', JSON.stringify(dropNode), dropType)
         },
-        dragoverHandler: _.throttle(function() {
-            if(!this.node.children){
-                this.$set(this.node, "children", []);
-            }
-        }, 1000),
+        onAdd(...p){
+            // console.log('add', p);
+        },
+        onRemove(...p){
+            // console.log('remove', p);
+        }
     },
 }
