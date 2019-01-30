@@ -19,7 +19,7 @@
     <draggable v-model="childs" :options="options" class="vue-draggle-tree-node-container" :move="onMove" 
         v-else
         @end="onEnd" @add="onAdd" @remove="onRemove">
-        <tree-node :una-key="k" :options="options" :parent="unaKey" :allow-drop="allowDrop" v-for="k in childs" :key="k">
+        <tree-node :una-key="k" :options="options" :parent-key="unaKey" :allow-drop="allowDrop" v-for="k in childs" :key="k">
             <template slot-scope="slotProps">
                 <slot v-bind="slotProps"/>
             </template>
