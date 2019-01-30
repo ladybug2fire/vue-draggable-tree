@@ -4,7 +4,7 @@
         <span :class="[{'active': active},{'arrow': childs && childs.length > 0}]"
             @click="clickHandler"
         ></span>
-        <slot name="leaf" v-bind="{node:{ node } , data: node.data }"></slot>
+        <slot v-bind="{node:{ node } , data: node.data }"></slot>
         <span :class="{'dragover': dragover}" v-if="!hasDefaultSlot">{{node.data.name}}-<font color="green">{{unaKey}}</font></span>
     </div>
     <div
@@ -20,8 +20,8 @@
         v-else
         @end="onEnd" @add="onAdd" @remove="onRemove">
         <tree-node :una-key="k" :options="options" :parent="unaKey" :allow-drop="allowDrop" v-for="k in childs" :key="k">
-            <template slot-scope="slotProps" slot="leaf">
-                <slot name="leaf" v-bind="slotProps"/>
+            <template slot-scope="slotProps">
+                <slot v-bind="slotProps"/>
             </template>
         </tree-node>
     </draggable>
