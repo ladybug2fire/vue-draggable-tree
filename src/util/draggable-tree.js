@@ -32,9 +32,9 @@ export default {
             }else{
                 dropType = isNewChlidren ? 'inner' : rctx.index < dctx.futureIndex ? 'after' : 'before'
             }
-            draggingNode = this.instances.get(draggingNode);
+            draggingNode = {... this.instances.get(draggingNode), key: draggingNode};
             if(dropType !== 'inner'){
-                dropNode = this.instances.get(dropNode);
+                dropNode = {...this.instances.get(dropNode), key: dropNode};
             }
             _.assignIn(this,{ dropType, draggingNode, dropNode });
             if(this.allowDrop){

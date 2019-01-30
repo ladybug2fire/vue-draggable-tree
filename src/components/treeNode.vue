@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div :class="['node']" @drop="dropHandler" ref="node">
+    <div :class="['node']" @drop="dropHandler" ref="node" @click="nodeClick">
         <span :class="[{'nodeActive': nodeActive},{'arrow': childs && childs.length > 0}]"
-            @click="clickHandler"
+            @click.stop="clickHandler"
         ></span>
         <slot v-bind="{node:{ node } , data: node.data }"></slot>
         <span :class="{'dragover': dragover}" v-if="!hasDefaultSlot">{{node.data.name}}-<font color="green">{{unaKey}}</font></span>
@@ -46,7 +46,8 @@ export default {
   inject:['rootTree'],
   computed:{
     node(){
-      return _.isMap(this.instances) && this.instances.get(this.unaKey);
+      const node = _.isMap(this.instances) && this.instances.get(this.unaKey);
+      return ({...node, key: this.unaKey});
     },
     childs:{
         get(){
@@ -66,8 +67,10 @@ export default {
     },
     clickHandler() {
       this.$set(this, "nodeActive", !this.nodeActive);
-      this.tree.$emit("node-click", this.instance);
     },
+    nodeClick(){
+      this.tree.$emit("node-click", {...this.node, key: this.unaKey})
+    }
   },
   mounted(){
     this.tree = this.rootTree();

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <tree v-model="tree" @treeDrop="listenDrop">
+    <tree v-model="tree" @treeDrop="listenDrop" @node-click="click">
         <!-- <template slot-scope="{node, data}">
           <div>
            {{data.name}}<a style="color:blue" @click="doProcess(node, data)">-删除</a>
@@ -165,6 +165,7 @@ export default {
     };
   },
   methods:{
+    click(...p){console.log(p)},
     listenDrop(v){
       console.log('listen', v)
     },
