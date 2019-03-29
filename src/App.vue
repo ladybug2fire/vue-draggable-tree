@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import tree from "./components/tree.vue";
+import tree from "./components/newTree";
 
 export default {
   name: "app",

@@ -42,6 +42,5 @@ export default {
 .vue-draggle-tree-node-container {
   padding-left: 1.5rem;
   color: #606266;
-  min-height: 1px;
 }
 </style>
