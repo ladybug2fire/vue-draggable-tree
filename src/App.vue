@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <tree v-model="tree" @treeDrop="listenDrop" @node-click="click">
+    <tree v-model="tree" @treeDrop="listenDrop" @node-click="click" :data="tree2">
         <!-- <template slot-scope="{node, data}">
           <div>
            {{data.name}}<a style="color:blue" @click="doProcess(node, data)">-删除</a>
