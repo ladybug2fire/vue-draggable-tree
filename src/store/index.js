@@ -2611,9 +2611,14 @@ const store = new Vuex.Store({
                       "BEuNTH10Z",
                       "8sLCXq_5A",
                       "1kZtOzj1f",
+                    ]
+                  },
+                  "content": {
+                    "title": "内容",
+                    "children": [
                       "WRZIFLxj5",
                       "_ryIWhCrj"
-                    ]
+                    ] 
                   }
                 },
                 "events": {
@@ -3658,7 +3663,7 @@ const store = new Vuex.Store({
                 }
               }
             },
-            "root": "99wHPJcui"
+        "root": "99wHPJcui"
     },
     getters:{
         rootInstanceKey(){
@@ -3669,15 +3674,9 @@ const store = new Vuex.Store({
         }
     },
     mutations:{
-        updateInstances(state, {key , childs}){
-            const instances = state.instances;
-            const val = instances.get(key);
-            val.childs = childs;
-            _.each(childs, (c)=>{
-                const cInstance = instances.get(c);
-                cInstance.parentInstanceKey = key;
-            });
-            state.instances = new Map(instances);
+        updateInstances(state, {key , childs, slots}){
+            let slot = _.get(state.instances, key+'.slots.'+slots);
+            slot.children = childs;
         }
     },
     actions: {
