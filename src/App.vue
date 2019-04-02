@@ -179,5 +179,6 @@ export default {
 <style>
 #app {
   margin-top: 60px;
+  width: 15vw;
 }
 </style>
