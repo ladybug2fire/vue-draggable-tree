@@ -35,6 +35,11 @@
 
     .leaf-node {
         position: relative;
+        transition: 0.3s height;
+        overflow: hidden;
+        &.inactive{
+            height: 0;
+        }
     }
 
     .slot-tag {
@@ -48,7 +53,7 @@
         color: #909399;
         right: 0;
         display: block;
-        top: 0;
+        top: 5px;
     }
 
     .draggable-leaf {
@@ -57,7 +62,6 @@
         &.active {
             box-sizing: border-box;
             border: 1px solid #03A9F4;
-            color: #03A9F4;
             border-radius: 4px;
             overflow: hidden;
         }
@@ -67,8 +71,13 @@
         min-height: 25px;
         line-height: 25px;
         position: relative;
+        .op-btn{
+            color: #03A9F4;
+            cursor: pointer;
+        }
         .arrow {
             width: 0;
+            cursor: pointer;
             height: 0;
             border-top: 4px solid transparent;
             border-left: 8px solid #DCDFE6;

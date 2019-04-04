@@ -24,6 +24,7 @@ export default {
             dropNode: null,
             dropType: null,
             focusNode: null,
+            activeNodes: {}
         }
     },
     methods:{
@@ -32,6 +33,7 @@ export default {
             if(!_.isEmpty(children)){
                 return children.map(e=>{
                     const childrenNode = this.recursiveTree(instances, e, h)
+                    if(!childrenNode)return null;
                     return h('div',
                     {
                         key: e,
@@ -80,18 +82,35 @@ export default {
             const currentNode = _.get(instances, parentKey);
             const slots = _.get(instances, `${parentKey}.slots`, {})
             const slotGroup = _.map(_.keys(slots), e=>_.assign(_.get(slots, e), {name: e}));
+            if(!currentNode)return null;
             return h('div',{class: ['leaf']},
                 [
                     h('div', {
                         class:['leaf-header'],
                     }, 
                     [
-                        h('div', {class: ['arrow', {'active': this.active}], active: true, on:{click(){this.active =!this.active;}}}),
-                        `${currentNode.title}-${parentKey}`
+                        h('div', {class: [{'arrow': !_.isEmpty(slotGroup)}, {'active': !_.has(this.activeNodes, parentKey)}], on:{click:()=>{
+                            if(_.has(this.activeNodes, parentKey)){
+                                this.$delete(this.activeNodes, parentKey)
+                            }else{
+                                this.$set(this.activeNodes, parentKey, true) 
+                            }
+                        }}}),
+                        `${currentNode.title}-${parentKey}`,
+                        h('span', {
+                            class: 'op-btn',
+                            on:{
+                            click:(e)=>{
+                                e.stopPropagation();
+                                this.$store.commit('deleteNode', {
+                                    key: parentKey
+                                })
+                            }
+                        }}, ['-删除'])
                     ]
                     ),
                     _.map(slotGroup, slot=>[
-                        h('div', { class:'leaf-node' },
+                        h('div', { class:['leaf-node', {'inactive': _.has(this.activeNodes, parentKey)}]},
                         [
                             h('draggable',{
                                 class: 'leaf-children',

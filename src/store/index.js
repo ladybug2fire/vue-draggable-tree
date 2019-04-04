@@ -3677,6 +3677,11 @@ const store = new Vuex.Store({
         updateInstances(state, {key , childs, slots}){
             let slot = _.get(state.instances, key+'.slots.'+slots);
             slot.children = childs;
+        },
+        deleteNode(state, {key}){
+          delete state.instances[key]
+          state.instances = _.assign({},state.instances);
+          console.log(state.instances);
         }
     },
     actions: {
